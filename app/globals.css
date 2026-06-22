@@ -1,0 +1,201 @@
+@import "tailwindcss";
+
+/*
+  EducAll design system — Khan Academy inspired.
+  Flat, friendly, education-first: a green brand, clean white surfaces, thin
+  neutral borders and minimal shadows. No gradients. We rely on a robust system
+  font stack with full Cyrillic coverage so the prototype renders correctly
+  offline (no external font fetch required).
+*/
+
+@theme {
+  --color-bg: #f7f8fa;
+  --color-surface: #ffffff;
+  --color-ink: #21242c;
+  --color-ink-soft: #5b6271;
+  --color-ink-muted: #9aa0ab;
+  --color-line: #e3e5e8;
+
+  /* Khan-style green */
+  --color-brand-50: #e9f7ef;
+  --color-brand-100: #c8ebd6;
+  --color-brand-200: #97dab1;
+  --color-brand-300: #5fc488;
+  --color-brand-400: #2faa64;
+  --color-brand-500: #129a4e;
+  --color-brand-600: #0c8043;
+  --color-brand-700: #0a6638;
+  --color-brand-800: #08512e;
+  --color-brand-900: #064124;
+
+  --color-mint-500: #10b981;
+  --color-amber-500: #f59e0b;
+  --color-rose-500: #ef4444;
+
+  --font-sans: "Lato", "Inter", "SF Pro Text", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans",
+    "Noto Sans Mongolian", Arial, sans-serif;
+
+  /* Minimal, Khan-like elevation — borders do most of the work. */
+  --shadow-soft: 0 1px 2px rgba(33, 36, 44, 0.05);
+  --shadow-lift: 0 4px 16px rgba(33, 36, 44, 0.1);
+
+  --radius-xl2: 1.25rem;
+}
+
+:root {
+  --background: var(--color-bg);
+  --foreground: var(--color-ink);
+}
+
+* {
+  border-color: var(--color-line);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------- Animations ---------- */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-soft {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes grow-bar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.35);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s cubic-bezier(0.21, 0.61, 0.35, 1) both;
+}
+.animate-fade-in-soft {
+  animation: fade-in-soft 0.6s ease both;
+}
+.animate-pop-in {
+  animation: pop-in 0.28s cubic-bezier(0.21, 0.61, 0.35, 1) both;
+}
+.animate-float {
+  animation: float-y 5s ease-in-out infinite;
+}
+.animate-pulse-ring {
+  animation: pulse-ring 2s infinite;
+}
+
+.bar-grow {
+  transform-origin: left;
+  animation: grow-bar 0.9s cubic-bezier(0.21, 0.61, 0.35, 1) both;
+}
+
+/* Stagger helpers for lists */
+.stagger > * {
+  opacity: 0;
+  animation: fade-in 0.5s cubic-bezier(0.21, 0.61, 0.35, 1) forwards;
+}
+.stagger > *:nth-child(1) {
+  animation-delay: 0.04s;
+}
+.stagger > *:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.stagger > *:nth-child(3) {
+  animation-delay: 0.16s;
+}
+.stagger > *:nth-child(4) {
+  animation-delay: 0.22s;
+}
+.stagger > *:nth-child(5) {
+  animation-delay: 0.28s;
+}
+.stagger > *:nth-child(6) {
+  animation-delay: 0.34s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom scrollbar for a more polished feel */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(33, 36, 44, 0.16);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(33, 36, 44, 0.26);
+  background-clip: content-box;
+}
