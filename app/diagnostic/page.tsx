@@ -70,13 +70,25 @@ export default function DiagnosticPage() {
           ?.options.find((o) => o.id === it.optionId)?.correct,
     ).length;
 
-    addSubmission({
+    const submission = {
       id: `sub-${Date.now()}`,
       studentName: (loggedInName || name).trim() || "Сурагч",
       answers: items,
       correctCount,
       submittedAt: Date.now(),
+    };
+
+    // Keep a local copy (works offline / same device) AND push to the shared
+    // backend so the teacher's dashboard on another device can see it.
+    addSubmission(submission);
+    void fetch("/api/submissions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(submission),
+    }).catch(() => {
+      // Network error — the local copy still stands; never block the student.
     });
+
     setPhase("done");
   }
 

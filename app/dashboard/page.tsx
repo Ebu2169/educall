@@ -23,7 +23,7 @@ import {
 } from "@/lib/mockData";
 import { CONCEPT_LABEL, generateClassSummary } from "@/lib/copilot";
 import { analyzeSubmission } from "@/lib/analyze";
-import { useAppState } from "@/lib/store";
+import { useAppState, type DemoSubmission } from "@/lib/store";
 import type { MisconceptionBucket, StudentRisk } from "@/lib/types";
 
 // Fold the live (non-low) submissions into the class misconception buckets so
@@ -50,8 +50,43 @@ function buildLiveBuckets(
 }
 
 export default function DashboardPage() {
-  const { submissions } = useAppState();
+  const { submissions: localSubmissions } = useAppState();
   const [active, setActive] = React.useState<StudentRisk | null>(null);
+  const [remoteSubmissions, setRemoteSubmissions] = React.useState<
+    DemoSubmission[]
+  >([]);
+
+  // Poll the shared backend so submissions from OTHER devices (e.g. a student's
+  // phone) appear on this teacher's dashboard within a few seconds.
+  React.useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const res = await fetch("/api/submissions", { cache: "no-store" });
+        const data = await res.json();
+        if (!cancelled && Array.isArray(data?.submissions)) {
+          setRemoteSubmissions(data.submissions);
+        }
+      } catch {
+        // ignore — keep showing whatever we already have
+      }
+    }
+    load();
+    const id = setInterval(load, 4000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, []);
+
+  // Merge local + remote submissions, de-duplicated by id, newest first.
+  const submissions = React.useMemo(() => {
+    const byId = new Map<string, DemoSubmission>();
+    for (const s of [...remoteSubmissions, ...localSubmissions]) {
+      byId.set(s.id, s);
+    }
+    return [...byId.values()].sort((a, b) => b.submittedAt - a.submittedAt);
+  }, [remoteSubmissions, localSubmissions]);
 
   // Live analysis of every student who submitted during the demo. Each
   // submission is paired with its analyzed risk profile + academic score.
