@@ -2,18 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  BookIcon,
-  GraduationIcon,
-  LayersIcon,
-  SparkleIcon,
-  UsersIcon,
-} from "./icons";
+import { BrandMark } from "./BrandMark";
+import { LayersIcon, SparkleIcon, UsersIcon } from "./icons";
 
 const nav = [
   { href: "/classes", label: "Ангиуд", icon: LayersIcon },
   { href: "/dashboard", label: "Багшийн самбар", icon: UsersIcon },
-  { href: "/diagnostic", label: "Сурагчийн оношлогоо", icon: BookIcon },
 ];
 
 export function Sidebar() {
@@ -22,9 +16,7 @@ export function Sidebar() {
   return (
     <aside className="hidden w-64 shrink-0 flex-col border-r border-[var(--color-line)] bg-white px-4 py-6 lg:flex">
       <Link href="/" className="flex items-center gap-2.5 px-2">
-        <span className="grid size-9 place-items-center rounded-lg bg-brand-600 text-white">
-          <GraduationIcon width={20} height={20} />
-        </span>
+        <BrandMark size={36} />
         <div className="leading-tight">
           <p className="text-base font-bold tracking-tight text-[var(--color-ink)]">
             EducAll

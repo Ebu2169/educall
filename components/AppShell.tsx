@@ -1,7 +1,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { Sidebar } from "./Sidebar";
-import { GraduationIcon } from "./icons";
+import { BrandMark } from "./BrandMark";
 
 export function AppShell({
   title,
@@ -23,9 +23,7 @@ export function AppShell({
           <div className="flex items-center gap-3 px-5 py-3.5 sm:px-8">
             {/* Mobile brand */}
             <Link href="/" className="flex items-center gap-2 lg:hidden">
-              <span className="grid size-8 place-items-center rounded-lg bg-brand-600 text-white">
-                <GraduationIcon width={18} height={18} />
-              </span>
+              <BrandMark size={32} />
             </Link>
             <div className="min-w-0">
               <h1 className="truncate text-lg font-bold tracking-tight text-[var(--color-ink)] sm:text-xl">

@@ -22,6 +22,13 @@ export interface DemoSubmission {
   submittedAt: number;
 }
 
+export type Role = "teacher" | "student";
+
+export interface Session {
+  role: Role;
+  name: string;
+}
+
 interface AppState {
   // studentId -> checked flag set by the teacher
   checked: Record<string, boolean>;
@@ -29,6 +36,8 @@ interface AppState {
   feedback: Record<string, TeacherFeedback>;
   // new student submissions made during the demo
   submissions: DemoSubmission[];
+  // the currently logged-in user (teacher or student), null when logged out
+  session: Session | null;
 }
 
 const STORAGE_KEY = "educall-demo-state-v1";
@@ -37,6 +46,7 @@ const defaultState: AppState = {
   checked: {},
   feedback: {},
   submissions: [],
+  session: null,
 };
 
 // ---- Module-level external store -------------------------------------------
@@ -98,6 +108,14 @@ export function addSubmission(submission: DemoSubmission) {
   update((s) => ({ ...s, submissions: [submission, ...s.submissions] }));
 }
 
+export function login(role: Role, name: string) {
+  update((s) => ({ ...s, session: { role, name: name.trim() || "Хэрэглэгч" } }));
+}
+
+export function logout() {
+  update((s) => ({ ...s, session: null }));
+}
+
 export function resetDemo() {
   update(() => ({ ...defaultState }));
 }
@@ -118,6 +136,8 @@ export interface AppStateContextValue extends AppState {
   markChecked: typeof markChecked;
   setFeedback: typeof setFeedback;
   addSubmission: typeof addSubmission;
+  login: typeof login;
+  logout: typeof logout;
   resetDemo: typeof resetDemo;
 }
 
@@ -132,6 +152,8 @@ export function useAppState(): AppStateContextValue {
     markChecked,
     setFeedback,
     addSubmission,
+    login,
+    logout,
     resetDemo,
   };
 }

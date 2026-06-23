@@ -1,10 +1,10 @@
 import Link from "next/link";
+import { BrandMark } from "@/components/BrandMark";
 import {
   AlertIcon,
   ArrowRightIcon,
   BookIcon,
   BrainIcon,
-  GraduationIcon,
   LightbulbIcon,
   PulseIcon,
   ShieldIcon,
@@ -41,9 +41,7 @@ export default function LandingPage() {
       <header className="sticky top-0 z-40 border-b border-[var(--color-line)] bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5 sm:px-8">
           <Link href="/" className="flex items-center gap-2.5">
-            <span className="grid size-9 place-items-center rounded-lg bg-brand-600 text-white">
-              <GraduationIcon width={20} height={20} />
-            </span>
+            <BrandMark size={36} />
             <div className="leading-tight">
               <p className="text-base font-bold tracking-tight">EducAll</p>
               <p className="text-[11px] font-medium text-[var(--color-ink-muted)]">
@@ -52,17 +50,17 @@ export default function LandingPage() {
             </div>
           </Link>
           <nav className="flex items-center gap-2">
-            <Link
-              href="/diagnostic"
+            <a
+              href="#how"
               className="hidden rounded-lg px-3.5 py-2 text-sm font-semibold text-[var(--color-ink-soft)] transition-colors hover:bg-slate-100 hover:text-[var(--color-ink)] sm:block"
             >
-              Сурагчийн оношлогоо
-            </Link>
+              Хэрхэн ажилладаг
+            </a>
             <Link
-              href="/classes"
+              href="/login"
               className="inline-flex items-center gap-1.5 rounded-lg bg-brand-600 px-3.5 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-700 active:scale-[0.98]"
             >
-              Багшийн самбар
+              Демо үзэх
               <ArrowRightIcon width={16} height={16} />
             </Link>
           </nav>
@@ -95,24 +93,24 @@ export default function LandingPage() {
 
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <Link
-                href="/classes"
+                href="/login"
                 className="group inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-base font-semibold text-white shadow-[var(--shadow-soft)] transition-all hover:bg-brand-700 active:scale-[0.98]"
               >
                 <UsersIcon width={20} height={20} />
-                Багшийн самбар нээх
+                Демо үзэх
                 <ArrowRightIcon
                   width={18}
                   height={18}
                   className="transition-transform group-hover:translate-x-0.5"
                 />
               </Link>
-              <Link
-                href="/diagnostic"
+              <a
+                href="#how"
                 className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-base font-semibold text-[var(--color-ink)] shadow-sm transition-all hover:bg-slate-50 active:scale-[0.98]"
               >
                 <BookIcon width={20} height={20} />
-                Сурагчийн оношлогоо туршиж үзэх
-              </Link>
+                Хэрхэн ажилладгийг үзэх
+              </a>
             </div>
 
             <p className="mt-5 text-sm text-[var(--color-ink-muted)]">
@@ -174,7 +172,7 @@ export default function LandingPage() {
       </section>
 
       {/* How it works */}
-      <section className="mx-auto max-w-6xl px-5 pb-16 sm:px-8">
+      <section id="how" className="mx-auto max-w-6xl px-5 pb-16 sm:px-8">
         <div className="overflow-hidden rounded-3xl border bg-white shadow-[var(--shadow-soft)]">
           <div className="grid gap-px bg-slate-100 md:grid-cols-3">
             <Step

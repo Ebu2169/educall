@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import { AppShell } from "@/components/AppShell";
 import { StatCard } from "@/components/StatCard";
 import { StudentRiskCard } from "@/components/StudentRiskCard";
@@ -11,8 +10,6 @@ import { AIReasoningModal } from "@/components/AIReasoningModal";
 import { RiskBadge } from "@/components/RiskBadge";
 import {
   AlertIcon,
-  ArrowRightIcon,
-  BookIcon,
   BrainIcon,
   CheckCircleIcon,
   InboxIcon,
@@ -93,14 +90,11 @@ export default function DashboardPage() {
       title="10А анги — Хичээлийн Copilot"
       subtitle={`${classRoom.topic} · Ангийн код ${classRoom.classCode}`}
       actions={
-        <Link
-          href="/diagnostic"
-          className="inline-flex items-center gap-1.5 rounded-lg bg-brand-600 px-3.5 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-700 active:scale-[0.98]"
-        >
-          <BookIcon width={16} height={16} />
-          <span className="hidden sm:inline">Оношлогоо нээх</span>
-          <span className="sm:hidden">Оношлогоо</span>
-        </Link>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1.5 text-xs font-semibold text-brand-700 ring-1 ring-brand-100">
+          <SparkleIcon width={14} height={14} />
+          <span className="hidden sm:inline">Багшийн самбар</span>
+          <span className="sm:hidden">Багш</span>
+        </span>
       }
     >
       {/* Live analysis of new submissions (shows EVERY submission, any risk) */}
@@ -240,23 +234,20 @@ export default function DashboardPage() {
             total={classRoom.totalStudents}
           />
 
-          {/* Empty-state nudge to run the demo flow */}
+          {/* Empty-state: students submit from their own phones */}
           {submissions.length === 0 && (
             <div className="rounded-2xl border border-dashed border-brand-200 bg-brand-50/40 p-4">
               <p className="flex items-center gap-1.5 text-sm font-bold text-brand-700">
-                <CheckCircleIcon width={16} height={16} /> Демо туршаарай
+                <CheckCircleIcon width={16} height={16} /> Хариултыг хүлээж байна
               </p>
               <p className="mt-1.5 text-xs leading-relaxed text-[var(--color-ink-soft)]">
-                Сурагчийн оношлогоог бөглөж илгээгээд энэ самбар руу буцаж ирэхэд
-                Copilot шинэ хариултыг шууд шинжилнэ.
+                Сурагчид утаснаасаа{" "}
+                <span className="font-mono font-semibold text-[var(--color-ink)]">
+                  {classRoom.classCode}
+                </span>{" "}
+                кодоор оношлогоог бөглөнө. Хариулт ирэх бүрд Copilot энэ самбар
+                дээр шууд шинжилж харуулна.
               </p>
-              <Link
-                href="/diagnostic"
-                className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700"
-              >
-                Оношлогоо нээх
-                <ArrowRightIcon width={15} height={15} />
-              </Link>
             </div>
           )}
         </aside>

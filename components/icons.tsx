@@ -179,3 +179,52 @@ export function GraduationIcon(props: IconProps) {
     </svg>
   );
 }
+
+export function HomeIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M4 11.5 12 4l8 7.5" />
+      <path d="M6 10.5V19a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-8.5" />
+      <path d="M10 20v-5h4v5" />
+    </svg>
+  );
+}
+
+export function ChatIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M5 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H9l-4 4v-4H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z" />
+      <path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01" />
+    </svg>
+  );
+}
+
+export function HomeworkIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M8 4h6l4 4v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z" />
+      <path d="M14 4v4h4" />
+      <path d="M9.5 13h5M9.5 16h3" />
+    </svg>
+  );
+}
+
+export function SendIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M4.5 12 20 4l-5 16-4-6-6.5-2z" />
+      <path d="m11 14 4-6" />
+    </svg>
+  );
+}
+
+export function RobotIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <rect x="5" y="8" width="14" height="10" rx="2.5" />
+      <path d="M12 4v4M9.5 13h.01M14.5 13h.01" />
+      <path d="M9.5 16h5M3.5 11.5v3M20.5 11.5v3" />
+      <circle cx="12" cy="3.5" r="1.2" />
+    </svg>
+  );
+}

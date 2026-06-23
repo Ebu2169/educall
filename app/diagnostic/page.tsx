@@ -1,15 +1,15 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import { DiagnosticQuestionCard } from "@/components/DiagnosticQuestionCard";
+import { StudentBottomNav } from "@/components/StudentBottomNav";
+import { ClassroomChat } from "@/components/ClassroomChat";
+import { BrandMark } from "@/components/BrandMark";
 import {
   ArrowRightIcon,
   BookIcon,
   CheckCircleIcon,
-  GraduationIcon,
   ShieldIcon,
-  SparkleIcon,
   UsersIcon,
 } from "@/components/icons";
 import { CLASS_CODE, classRoom } from "@/lib/mockData";
@@ -26,7 +26,12 @@ const { questions, topic } = generateWeeklyDiagnostic(
 );
 
 export default function DiagnosticPage() {
-  const { addSubmission } = useAppState();
+  const { addSubmission, session } = useAppState();
+  // When the student arrived via the login page we already have their name —
+  // don't ask for it (or the class code) again, that felt like a second login.
+  const loggedInName = session?.role === "student" ? session.name : "";
+  const isLoggedIn = loggedInName.trim().length > 0;
+
   const [phase, setPhase] = React.useState<Phase>("intro");
   const [name, setName] = React.useState("");
   const [code, setCode] = React.useState(CLASS_CODE);
@@ -67,7 +72,7 @@ export default function DiagnosticPage() {
 
     addSubmission({
       id: `sub-${Date.now()}`,
-      studentName: name.trim() || "Сурагч",
+      studentName: (loggedInName || name).trim() || "Сурагч",
       answers: items,
       correctCount,
       submittedAt: Date.now(),
@@ -84,31 +89,27 @@ export default function DiagnosticPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="flex min-h-[100dvh] flex-col">
       {/* Light student header */}
-      <header className="border-b border-[var(--color-line)] bg-white">
-        <div className="mx-auto flex max-w-2xl items-center justify-between px-5 py-3.5">
-          <Link href="/" className="flex items-center gap-2.5">
-            <span className="grid size-9 place-items-center rounded-lg bg-brand-600 text-white">
-              <GraduationIcon width={20} height={20} />
-            </span>
+      <header className="sticky top-0 z-20 border-b border-[var(--color-line)] bg-white/95 backdrop-blur">
+        <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-3 sm:px-5 sm:py-3.5">
+          <div className="flex items-center gap-2.5">
+            <BrandMark size={36} />
             <div className="leading-tight">
               <p className="text-base font-bold tracking-tight">EducAll</p>
               <p className="text-[11px] font-medium text-[var(--color-ink-muted)]">
                 Сурагчийн оношлогоо
               </p>
             </div>
-          </Link>
-          <Link
-            href="/dashboard"
-            className="text-sm font-semibold text-[var(--color-ink-soft)] transition-colors hover:text-[var(--color-ink)]"
-          >
-            Багшийн самбар
-          </Link>
+          </div>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-semibold text-brand-700">
+            <BookIcon width={13} height={13} />
+            Долоо хоногийн оношлогоо
+          </span>
         </div>
       </header>
 
-      <main className="mx-auto max-w-2xl px-5 py-10">
+      <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-28 pt-7 sm:px-5 sm:pt-10">
         {/* INTRO */}
         {phase === "intro" && (
           <div className="animate-fade-in">
@@ -116,7 +117,7 @@ export default function DiagnosticPage() {
               <BookIcon width={14} height={14} />
               {topic}
             </span>
-            <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-[var(--color-ink)]">
+            <h1 className="mt-4 text-2xl font-extrabold tracking-tight text-[var(--color-ink)] sm:text-3xl">
               Энэ долоо хоногийн богино оношлогоо
             </h1>
             <p className="mt-2 text-[var(--color-ink-soft)]">
@@ -129,38 +130,56 @@ export default function DiagnosticPage() {
             </p>
 
             <div className="mt-6 space-y-4 rounded-2xl border bg-white p-5 shadow-[var(--shadow-soft)] sm:p-6">
-              <Field label="Нэр">
-                <div className="relative">
-                  <UsersIcon
-                    width={18}
-                    height={18}
-                    className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-ink-muted)]"
-                  />
-                  <input
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Жишээ нь: Хулан"
-                    className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-10 pr-4 text-[var(--color-ink)] outline-none transition-all placeholder:text-slate-400 focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
-                  />
+              {isLoggedIn ? (
+                <div className="flex items-center gap-3 rounded-xl bg-brand-50 p-4">
+                  <span className="grid size-10 shrink-0 place-items-center rounded-full bg-brand-600 text-base font-bold text-white">
+                    {loggedInName.trim().slice(0, 1).toUpperCase()}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-[var(--color-ink)]">
+                      Сайн уу, {loggedInName}!
+                    </p>
+                    <p className="text-xs text-[var(--color-ink-soft)]">
+                      {classRoom.grade} · Бэлэн болсон бол эхэлцгээе.
+                    </p>
+                  </div>
                 </div>
-              </Field>
+              ) : (
+                <>
+                  <Field label="Нэр">
+                    <div className="relative">
+                      <UsersIcon
+                        width={18}
+                        height={18}
+                        className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-ink-muted)]"
+                      />
+                      <input
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Жишээ нь: Хулан"
+                        className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-10 pr-4 text-[var(--color-ink)] outline-none transition-all placeholder:text-slate-400 focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+                      />
+                    </div>
+                  </Field>
 
-              <Field label="Ангийн код">
-                <input
-                  value={code}
-                  onChange={(e) => setCode(e.target.value.toUpperCase())}
-                  placeholder="UB-BZD-TOM-10A"
-                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 font-mono text-[var(--color-ink)] outline-none transition-all placeholder:text-slate-400 focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
-                />
-                <p className="mt-1.5 text-xs text-[var(--color-ink-muted)]">
-                  Багшаас өгсөн ангийн код. Демо код:{" "}
-                  <span className="font-mono font-semibold">{CLASS_CODE}</span>
-                </p>
-              </Field>
+                  <Field label="Ангийн код">
+                    <input
+                      value={code}
+                      onChange={(e) => setCode(e.target.value.toUpperCase())}
+                      placeholder="UB-BZD-TOM-10A"
+                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 font-mono text-[var(--color-ink)] outline-none transition-all placeholder:text-slate-400 focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+                    />
+                    <p className="mt-1.5 text-xs text-[var(--color-ink-muted)]">
+                      Багшаас өгсөн ангийн код. Демо код:{" "}
+                      <span className="font-mono font-semibold">{CLASS_CODE}</span>
+                    </p>
+                  </Field>
+                </>
+              )}
 
               <button
                 onClick={() => setPhase("quiz")}
-                disabled={!name.trim()}
+                disabled={!isLoggedIn && !name.trim()}
                 className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-base font-semibold text-white shadow-sm transition-all hover:bg-brand-700 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Эхлэх
@@ -204,11 +223,13 @@ export default function DiagnosticPage() {
               onSelectConfidence={setConfidence}
             />
 
-            <div className="mt-5 flex items-center gap-3">
+            {/* Action bar — sticks just above the bottom nav on mobile so the
+                primary button is always within thumb reach. */}
+            <div className="sticky bottom-16 z-10 -mx-4 mt-5 flex items-center gap-3 border-t border-[var(--color-line)] bg-white/95 px-4 py-3 backdrop-blur sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
               <button
                 onClick={() => setStep((s) => Math.max(0, s - 1))}
                 disabled={step === 0}
-                className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-[var(--color-ink-soft)] transition-all hover:bg-slate-50 disabled:opacity-40"
+                className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-[var(--color-ink-soft)] transition-all hover:bg-slate-50 disabled:opacity-40 sm:py-2.5"
               >
                 Буцах
               </button>
@@ -216,7 +237,7 @@ export default function DiagnosticPage() {
                 <button
                   onClick={submit}
                   disabled={!canAdvance}
-                  className="ml-auto inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-emerald-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="ml-auto inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-base font-semibold text-white shadow-sm transition-all hover:bg-emerald-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none sm:text-sm"
                 >
                   <CheckCircleIcon width={18} height={18} />
                   Илгээх
@@ -225,7 +246,7 @@ export default function DiagnosticPage() {
                 <button
                   onClick={() => setStep((s) => s + 1)}
                   disabled={!canAdvance}
-                  className="group ml-auto inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="group ml-auto inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-base font-semibold text-white shadow-sm transition-all hover:bg-brand-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none sm:text-sm"
                 >
                   Дараах
                   <ArrowRightIcon
@@ -264,24 +285,22 @@ export default function DiagnosticPage() {
               </p>
             </div>
 
-            <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-              <Link
-                href="/dashboard"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-base font-semibold text-white shadow-sm transition-all hover:bg-brand-700 active:scale-[0.98]"
-              >
-                <SparkleIcon width={18} height={18} />
-                Багшийн самбар дээр үр дүнг харах
-              </Link>
+            <div className="mt-7 flex justify-center">
               <button
                 onClick={restart}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-base font-semibold text-[var(--color-ink)] transition-all hover:bg-slate-50"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-base font-semibold text-[var(--color-ink)] transition-all hover:bg-slate-50 active:scale-[0.98]"
               >
+                <ArrowRightIcon width={18} height={18} />
                 Дахин бөглөх
               </button>
             </div>
           </div>
         )}
       </main>
+
+      {/* Classroom AI assistant (floating) + decorative app nav */}
+      <ClassroomChat />
+      <StudentBottomNav />
     </div>
   );
 }
