@@ -15,8 +15,19 @@
 
 import type { DemoSubmission } from "./store";
 
-const URL = process.env.SUPABASE_URL?.replace(/\/$/, "");
-const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+// Accept either the real API URL (https://<ref>.supabase.co) OR the dashboard
+// URL (https://supabase.com/dashboard/project/<ref>) — a very common paste
+// mistake — and normalise both to the API origin.
+function normalizeUrl(raw?: string): string | undefined {
+  if (!raw) return undefined;
+  const u = raw.trim().replace(/\/+$/, "");
+  const dash = u.match(/dashboard\/project\/([a-z0-9]+)/i);
+  if (dash) return `https://${dash[1]}.supabase.co`;
+  return u;
+}
+
+const URL = normalizeUrl(process.env.SUPABASE_URL);
+const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
 
 export const supabaseConfigured = Boolean(URL && KEY);
 
