@@ -31,8 +31,8 @@ export const classRoom: ClassRoom = {
   grade: "10А анги",
   subject: "Математик",
   classCode: CLASS_CODE,
-  totalStudents: 72,
-  submittedThisWeek: 61,
+  totalStudents: 49,
+  submittedThisWeek: 38,
   strugglingCount: 18,
   needAttentionCount: 4,
   weeklyActive: true,
@@ -286,9 +286,9 @@ export const rosterNames = [
 ];
 
 // ---------------------------------------------------------------------------
-// Full class roster (72 students) for the class-wide list/detail pages.
+// Full class roster (49 students) for the class-wide list/detail pages.
 // Counts are calibrated to match the dashboard summary:
-//   72 total · 61 submitted · 18 struggling · 4 need attention now
+//   49 total · 38 submitted · 18 struggling · 4 need attention now
 // ---------------------------------------------------------------------------
 
 function buildRoster(): RosterStudent[] {
